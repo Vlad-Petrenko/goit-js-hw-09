@@ -14,6 +14,7 @@ const refs = {
 let selectedTime = '';
 let intervalId = null;
 let time = '';
+// let deltaTime = null;
 refs.btnStart.disabled = true;
 
 const options = {
@@ -41,8 +42,15 @@ function start() {
     const deltaTime = selectedTime - currentTime;
     time = convertMs(deltaTime);
     onTick(time);
+    stop(deltaTime);
   }, 1000);
   refs.btnStart.disabled = true;
+}
+
+function stop(deltaTime) {
+  if (deltaTime <= 1000) {
+    clearInterval(intervalId);
+  }
 }
 
 function onTick({ days, hours, minutes, seconds } = time) {
