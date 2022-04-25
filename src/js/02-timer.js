@@ -4,7 +4,15 @@ import 'flatpickr/dist/flatpickr.min.css';
 const refs = {
   btnStart: document.querySelector('[data-start]'),
   timerField: document.querySelector('.timer'),
+  selectedDays: document.querySelector('[data-days]'),
+  selectedHours: document.querySelector('[data-hours]'),
+  selectedMinutes: document.querySelector('[data-minutes]'),
+  selectedSeconds: document.querySelector('[data-seconds]'),
 };
+
+let selectedTime = '';
+let intervalId = null;
+let time = '';
 refs.btnStart.disabled = true;
 
 const options = {
@@ -13,20 +21,35 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
+    selectedTime = selectedDates[0];
     if (selectedDates[0] <= options.defaultDate) {
       return window.alert('Please choose a date in the future');
     } else {
       refs.btnStart.disabled = false;
     }
-    const timer = setInterval(() => {
-      const deltaTime = selectedDates[0] - options.defaultDate;
-      const time = convertMs(deltaTime);
-      console.log(time);
-    }, 1000);
   },
 };
 
 flatpickr('#datetime-picker', options);
+
+refs.btnStart.addEventListener('click', start);
+
+function start() {
+  intervalId = setInterval(() => {
+    const currentTime = Date.now();
+    const deltaTime = selectedTime - currentTime;
+    time = convertMs(deltaTime);
+    onTick(time);
+  }, 1000);
+  refs.btnStart.disabled = true;
+}
+
+function onTick({ days, hours, minutes, seconds } = time) {
+  refs.selectedDays.textContent = days;
+  refs.selectedHours.textContent = hours;
+  refs.selectedMinutes.textContent = minutes;
+  refs.selectedSeconds.textContent = seconds;
+}
 
 function convertMs(ms) {
   const second = 1000;
