@@ -10,7 +10,7 @@ const refs = {
 
 refs.startBtnChangeColor.addEventListener('click', changeColor);
 refs.stopBtnColor.addEventListener('click', stopChangeColor);
-let onChangeColor = 'null';
+let onChangeColor = null;
 
 function changeColor() {
   onChangeColor = setInterval(() => {
